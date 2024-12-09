@@ -23,6 +23,7 @@ function App() {
 
         const response = await res.json() as Producto[];
         setData(response);
+        console.log(response);
         
       } catch (e) {
         console.log(e);
@@ -34,13 +35,36 @@ function App() {
 
   return (
     <div>
-      {data.length === 0 ? (
-        <p>Sin datos</p>
-      ) : (
-        data.map((item) => (
-          <p key={item.productoId}>{item.nombre}</p>
-        ))
-      )}
+      <h1>Gestión de Productos</h1>
+      <hr />
+      <h3>Agregar producto</h3>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>ProductoId</th>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Fecha Creación</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.length === 0 ? (
+            <tr>
+              <td>Sin datos</td>
+            </tr>
+          ) : (
+            data.map((item) => (
+              <tr key={item.productoId}>
+                <td>{item.productoId}</td>
+                <td>{item.nombre}</td>
+                <td>${item.precio}</td>
+                <td>{new Date(item.fechaCreacion).toLocaleDateString()}</td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
     </div>
   );
 }
