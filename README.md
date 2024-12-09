@@ -1,1 +1,2 @@
-# product
+# Product Front
+🟢 run > npm install / npm i
