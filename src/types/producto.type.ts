@@ -1,6 +1,6 @@
 export type Producto = {
-    ProductoID: number;
-    Nombre: string;
-    Precio: number;
-    FechaCreacion: Date;
+    productoId: number;
+    nombre: string;
+    precio: number;
+    fechaCreacion: string;
 }
