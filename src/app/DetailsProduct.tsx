@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import ProductIcon from '../components/icons/ProductIcon.tsx';
-import { postProduct } from '../services/product.services.tsx';
+import { getById, postProduct } from '../services/product.services.tsx';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Producto } from '../types/producto.type.ts';
 
@@ -8,14 +8,15 @@ export default function DetailsProduct() {
     const [nombre, setNombre] = useState(''); 
     const [mensaje, setMensaje] = useState(''); 
     const [precio, setPrecio] = useState(0); 
+
     const [isEdit, setIsEdit] = useState(false);
 
     const [producto, setProducto] = useState<Producto>()
     const navLinkData = useLocation();
 
     useEffect(()=>{
-        const productData = () =>{
-            const data = navLinkData.state;;
+        const productData = async () =>{
+            const data = await getById(navLinkData.state["productoId"]);
             setProducto(data as Producto);         
         }
 
@@ -23,25 +24,25 @@ export default function DetailsProduct() {
 
     },[])
 
-    const send = async (event)=>{
+    const edit = async (event)=>{
         try{
             event.preventDefault(); 
-            const sendProduct = async () => {
+            const editProduct = async () => {
                 if(nombre === ''){
                     setMensaje('El campo nombre no puede estar vacío');
                 }else{
-                    const res= await postProduct(nombre, precio);
+                  /*  const res= await edit(nombre, precio);
                     if(res === true ){
                         setMensaje('Producto actualizado con éxito');
                         setNombre(''); 
                         setPrecio(1); 
                     }else{
                         setMensaje('Ha ocurrido un error al crear el producto :(');
-                    }
+                    }*/
                 }
 
             };
-            sendProduct();
+            editProduct();
 
         }catch(e){
             console.log(e);
@@ -66,7 +67,7 @@ export default function DetailsProduct() {
         </h1>
         </div>
    
-        <form onSubmit={send}>
+        <form onSubmit={edit}>
           <div className='mb-6 text-lg'>
             <label className='block mb-2' htmlFor="nombre">Nombre</label>
             {
@@ -96,7 +97,13 @@ export default function DetailsProduct() {
                         onChange={(e) => setPrecio(Number(e.target.value))}
                     />
                 :
-                <p className='font-semibold text-cyan-700'>{producto?.precio}</p>
+                <div>
+                    <p className='font-semibold text-cyan-700'>{producto?.precio}</p>
+
+                    <label className='block mb-2 mt-2' htmlFor="precio">Fecha de creación</label>
+                    <p className='font-semibold text-cyan-700'>{producto?.fechaCreacion}</p>
+                </div>
+
 
             }
           </div>
