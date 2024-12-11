@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import ProductIcon from '../components/icons/ProductIcon.tsx';
-import { getById, postProduct } from '../services/product.services.tsx';
+import { editProd, getById } from '../services/product.services.tsx';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Producto } from '../types/producto.type.ts';
 
@@ -8,7 +8,7 @@ export default function DetailsProduct() {
     const [nombre, setNombre] = useState(''); 
     const [mensaje, setMensaje] = useState(''); 
     const [precio, setPrecio] = useState(0); 
-
+    const [id, setId] = useState(0);
     const [isEdit, setIsEdit] = useState(false);
 
     const [producto, setProducto] = useState<Producto>()
@@ -16,8 +16,16 @@ export default function DetailsProduct() {
 
     useEffect(()=>{
         const productData = async () =>{
-            const data = await getById(navLinkData.state["productoId"]);
-            setProducto(data as Producto);         
+            let id = navLinkData.state["productoId"];
+            const data = await getById(id);
+            console.log(data);
+            setProducto(data as Producto);   
+            if(producto !== undefined){
+                setNombre(producto.nombre);
+                setPrecio(producto.precio);
+            }
+
+            setId(id);      
         }
 
         productData();
@@ -28,17 +36,21 @@ export default function DetailsProduct() {
         try{
             event.preventDefault(); 
             const editProduct = async () => {
-                if(nombre === ''){
-                    setMensaje('El campo nombre no puede estar vacío');
-                }else{
-                  /*  const res= await edit(nombre, precio);
-                    if(res === true ){
-                        setMensaje('Producto actualizado con éxito');
-                        setNombre(''); 
-                        setPrecio(1); 
+                if(isEdit){
+                    if(nombre === ''){
+                        setMensaje('El campo nombre no puede estar vacío');
                     }else{
-                        setMensaje('Ha ocurrido un error al crear el producto :(');
-                    }*/
+                        const res = await editProd(id, nombre, precio);
+                        if(res !== null ){
+                            setMensaje('Producto actualizado con éxito');
+    
+                            const editedProduct: Producto = res as Producto;
+                            setProducto(editedProduct);
+                            setIsEdit(false);
+                        }else{
+                            setMensaje('Ha ocurrido un error al editar el producto :(');
+                        }
+                    }
                 }
 
             };
@@ -76,7 +88,7 @@ export default function DetailsProduct() {
                         className='border w-48 h-8 p-2'
                         type="text"
                         id="nombre"
-                        value={producto?.nombre}
+                        value={nombre || producto?.nombre}
                         onChange={(e) => setNombre(e.target.value)}
                     
                     />
@@ -93,7 +105,7 @@ export default function DetailsProduct() {
                         type="number"
                         id="precio"
                         min={1}
-                        value={producto?.precio}
+                        value={precio || producto?.precio}
                         onChange={(e) => setPrecio(Number(e.target.value))}
                     />
                 :
