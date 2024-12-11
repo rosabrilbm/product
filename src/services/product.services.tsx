@@ -49,3 +49,24 @@ export async function postProduct(nombre:string, precio:number): Promise<Boolean
         return false;
     }
 }
+
+export async function getById(id:number): Promise<Producto> {
+    const url = `https://localhost:7176/api/Productos/${id}`;
+    try {
+        const res = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        const data = await res.json() as Producto;
+
+        data.fechaCreacion = new Date(data.fechaCreacion).toLocaleDateString();
+        return data;
+
+    } catch (e) {
+        console.log(e);
+        throw e;
+    }
+}
