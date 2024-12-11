@@ -26,7 +26,7 @@ return (
             </div>
         </div>
         <NavLink to="/AddProduct">
-            <button className="p-4 border-b rounded-2xl border-cyan-700 font-semibold bg-cyan-600 hover:bg-cyan-700 hover:text-cyan-50">
+            <button className="p-4 border-b rounded-2xl text-white border-cyan-700 font-semibold bg-cyan-600 hover:bg-cyan-700 hover:text-cyan-50">
                 Añadir producto
             </button>
         </NavLink>

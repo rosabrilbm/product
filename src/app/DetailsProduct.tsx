@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import ProductIcon from '../components/icons/ProductIcon.tsx';
-import { getById, postProduct } from '../services/product.services.tsx';
+import { deleteProd, editProd, getById } from '../services/product.services.tsx';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Producto } from '../types/producto.type.ts';
 
@@ -8,37 +8,49 @@ export default function DetailsProduct() {
     const [nombre, setNombre] = useState(''); 
     const [mensaje, setMensaje] = useState(''); 
     const [precio, setPrecio] = useState(0); 
-
+    const [id, setId] = useState(0);
     const [isEdit, setIsEdit] = useState(false);
 
     const [producto, setProducto] = useState<Producto>()
     const navLinkData = useLocation();
 
-    useEffect(()=>{
-        const productData = async () =>{
-            const data = await getById(navLinkData.state["productoId"]);
-            setProducto(data as Producto);         
+    useEffect(() => {
+        const productData = async () => {
+            let id = navLinkData.state["productoId"];
+            const data: Producto = await getById(id);
+            console.log(data);
+            
+            setProducto(data);
+
+            setNombre(data.nombre);
+            setPrecio(data.precio);
+            setId(id);
         }
 
-        productData();
-
-    },[])
+        if (navLinkData.state) {
+            productData();
+        }
+    }, [navLinkData.state]);
 
     const edit = async (event)=>{
         try{
             event.preventDefault(); 
             const editProduct = async () => {
-                if(nombre === ''){
-                    setMensaje('El campo nombre no puede estar vacío');
-                }else{
-                  /*  const res= await edit(nombre, precio);
-                    if(res === true ){
-                        setMensaje('Producto actualizado con éxito');
-                        setNombre(''); 
-                        setPrecio(1); 
+                if(isEdit){
+                    if(nombre === ''){
+                        setMensaje('El campo nombre no puede estar vacío');
                     }else{
-                        setMensaje('Ha ocurrido un error al crear el producto :(');
-                    }*/
+                        const res = await editProd(id, nombre, precio);
+                        if(res !== null ){
+                            setMensaje('Producto actualizado con éxito');
+    
+                            const editedProduct: Producto = res as Producto;
+                            setProducto(editedProduct);
+                            setIsEdit(false);
+                        }else{
+                            setMensaje('Ha ocurrido un error al editar el producto :(');
+                        }
+                    }
                 }
 
             };
@@ -48,6 +60,20 @@ export default function DetailsProduct() {
             console.log(e);
         }
 
+    };
+
+    const deleteProduct = async () =>{
+        const confirmDelete = window.confirm("¿Está seguro de que quiere eliminar el producto?");
+        if (confirmDelete) {
+            const res = await deleteProd(id);
+            if(res){
+                window.location.href = "/"; 
+            }else{
+                setMensaje("Eliminar cancelado, ha ocurrido un error");
+            }
+        } else {
+            setMensaje("Eliminar cancelado");
+        }
     };
 
   return (
@@ -76,7 +102,7 @@ export default function DetailsProduct() {
                         className='border w-48 h-8 p-2'
                         type="text"
                         id="nombre"
-                        value={producto?.nombre}
+                        value={nombre || producto?.nombre}
                         onChange={(e) => setNombre(e.target.value)}
                     
                     />
@@ -93,7 +119,7 @@ export default function DetailsProduct() {
                         type="number"
                         id="precio"
                         min={1}
-                        value={producto?.precio}
+                        value={precio || producto?.precio}
                         onChange={(e) => setPrecio(Number(e.target.value))}
                     />
                 :
@@ -130,12 +156,24 @@ export default function DetailsProduct() {
 
                 
                 :
+         
                 <button 
-                onClick={()=> {setIsEdit(true); setMensaje('')}}
-                className="p-2 border-b rounded-xl w-80 text-cyan-100 border-cyan-700 font-semibold bg-cyan-600 hover:bg-cyan-700 hover:text-cyan-200"
-                >
-                    Cambiar a modo edición
+                    onClick={()=> {setIsEdit(true)}}
+                    className="mr-8 p-2 border-b rounded-xl w-80 text-cyan-100 border-cyan-700 font-semibold bg-cyan-600 hover:bg-cyan-700 hover:text-cyan-200"
+                    >
+                        Cambiar a modo edición
                 </button>
+            }
+            {
+                !isEdit?
+                <button 
+                    onClick={()=> deleteProduct()}
+                    className="p-2 border-b rounded-xl w-40 text-cyan-100 border-cyan-700 font-semibold bg-blue-950  hover:bg-cyan-700 hover:text-cyan-200"
+                    >
+                    Eliminar
+                </button>
+                :
+                ""
             }
 
         </form>

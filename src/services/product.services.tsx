@@ -70,3 +70,46 @@ export async function getById(id:number): Promise<Producto> {
         throw e;
     }
 }
+
+export async function editProd(id:number, nombre:string, precio:number): Promise<Producto> {
+    const url = `https://localhost:7176/api/Productos/${id}`;
+    try {
+        const edit = {
+            nombre: nombre,
+            precio: precio,
+        };
+
+        await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(edit)
+        });
+         
+        const res = getById(id);
+        return res;
+
+    } catch (e) {
+        console.log(e);
+        throw e;
+    }
+}
+
+export async function deleteProd(id:number): Promise<boolean> {
+    const url = `https://localhost:7176/api/Productos/${id}`;
+    try {
+        await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        return true;
+
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+}
