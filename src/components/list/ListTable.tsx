@@ -46,7 +46,7 @@ export default function ListTable({columns, dataRows, data}: Readonly<Props>) {
                                     {
                                         dataRows.map((dataRow, dataRowIndex) => (
                                             <td key={dataRowIndex} className="py-4 px-6 border-b border-gray-200 text-lg">
-                                                <span className="block font-semibold text-primary">
+                                                <span className="block font-semibold">
                                                     {row[dataRow]} 
                                                 </span>
                                             </td>
@@ -60,7 +60,7 @@ export default function ListTable({columns, dataRows, data}: Readonly<Props>) {
                                     {
                                         dataRowsEmpty.map((dataRow, dataRowIndex) => (
                                             <td key={dataRowIndex} className="py-4 px-6 border-b border-gray-200 text-lg">
-                                                <span className="block font-semibold text-primary">
+                                                <span className="block font-semibold">
                                                     {row[dataRow]} 
                                                 </span>
                                             </td>
