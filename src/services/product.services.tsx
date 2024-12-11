@@ -95,3 +95,21 @@ export async function editProd(id:number, nombre:string, precio:number): Promise
         throw e;
     }
 }
+
+export async function deleteProd(id:number): Promise<boolean> {
+    const url = `https://localhost:7176/api/Productos/${id}`;
+    try {
+        await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        return true;
+
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+}
