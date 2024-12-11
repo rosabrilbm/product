@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import ListHeader from '../list/ListHeader.tsx';
-import ListTable from '../list/ListTable.tsx';
-import getProducts from '../../services/product.services.tsx';
-import { Producto } from '../../types/producto.type.ts';
-
+import ListHeader from '../components/list/ListHeader.tsx';
+import ListTable from '../components/list/ListTable.tsx';
+import { Producto } from '../types/producto.type.ts';
+import {getProducts} from '../services/product.services.tsx';
 export default function Products() {
     const [data, setData] = useState<Producto[]>([]);
 

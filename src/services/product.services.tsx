@@ -1,6 +1,6 @@
 import {Producto} from '../types/producto.type';
 
-export default async function getProducts(): Promise<Producto[]> {
+export async function getProducts(): Promise<Producto[]> {
     try {
         const url = 'https://localhost:7176/api/Productos';
 
@@ -24,5 +24,28 @@ export default async function getProducts(): Promise<Producto[]> {
     } catch (e) {
         console.log(e);
         throw e; 
+    }
+}
+
+export async function postProduct(nombre:string, precio:number): Promise<Boolean> {
+    const url = 'https://localhost:7176/api/Productos';
+    const post = {
+        nombre: nombre,
+        precio: precio,
+    };
+
+    try {
+        await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(post)
+        });
+
+        return true;
+    } catch (e) {
+        console.log(e);
+        return false;
     }
 }
