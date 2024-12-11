@@ -26,7 +26,7 @@ export default function Products() {
     <section>
         <ListHeader headerTitle="LISTA DE PRODUCTOS" dataLength={data.length}/> 
         <div className='mt-4'>
-            <ListTable data={data} columns={column} dataRows={dataRows} />
+            <ListTable data={data} columns={column} dataRows={dataRows} navigateTo='DetailsProduct' />
         </div>
     </section>
 

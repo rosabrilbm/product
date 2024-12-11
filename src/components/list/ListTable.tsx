@@ -1,9 +1,11 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 
 type Props = {
     columns?: string[];    
     dataRows?: string[];
     data: Record<string, any>[];
+    navigateTo?: string;
 };
 
 const columnEmpty = ["Column 1", "Column 2", "Column 3", "Column 4", "Add more columns"];
@@ -17,7 +19,8 @@ const dataEmpty: Record<string, any> = [
     }
 ];
 
-export default function ListTable({columns, dataRows, data}: Readonly<Props>) {
+export default function ListTable({columns, dataRows, data, navigateTo}: Readonly<Props>) {
+    navigateTo = `/${navigateTo}`;
     return (
         <div className="border border-gray-200 rounded-lg flex items-center justify-between bg-white">
             <div className="rounded-lg overflow-hidden h-auto">
@@ -46,9 +49,11 @@ export default function ListTable({columns, dataRows, data}: Readonly<Props>) {
                                     {
                                         dataRows.map((dataRow, dataRowIndex) => (
                                             <td key={dataRowIndex} className="py-4 px-6 border-b border-gray-200 text-lg">
-                                                <span className="block font-semibold">
-                                                    {row[dataRow]} 
-                                                </span>
+                                                <NavLink to={navigateTo??"/"} state={row}>
+                                                    <span className="block font-semibold">   
+                                                        {row[dataRow]} 
+                                                    </span>
+                                                </NavLink>
                                             </td>
                                         ))
                                     }
